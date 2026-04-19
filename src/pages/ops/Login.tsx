@@ -60,10 +60,18 @@ export function OpsLogin() {
   return (
     <div className="min-h-screen flex items-center justify-center px-6 bg-background text-foreground">
       <div className="w-full max-w-sm">
-        <div className="text-[0.7rem] uppercase tracking-[0.2em] text-muted-foreground mb-6">
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <div className="h-px w-10 bg-border" />
+          <div className="h-1.5 w-1.5 rotate-45 bg-muted-foreground/70" />
+          <div className="h-px w-10 bg-border" />
+        </div>
+        <div className="text-[0.7rem] uppercase tracking-[0.2em] text-muted-foreground text-center mb-3">
           Continuum Ops
         </div>
-        <h1 className="text-2xl font-serif mb-8">Sign in</h1>
+        <h1 className="text-2xl font-serif text-center mb-2">Sign in</h1>
+        <p className="text-xs italic font-serif text-muted-foreground text-center mb-8">
+          By invitation. Operators only.
+        </p>
 
         <Button
           type="button"
