@@ -16,6 +16,13 @@ _None._
 ## Log
 
 ### 2026-04-19 — Filip
+**Spelling + contact form**
+
+- Switched "Enquiry / Enquiries" → "Inquiry / Inquiries" site-wide: nav label (`src/components/Navigation.tsx`), Contact eyebrow + body (`src/components/Contact.tsx`, `src/pages/Contact.tsx`), and copy docx (`website-copy.docx`).
+- Added an inquiry form to the Contact section (component + page). Fields: Name, Email, Referred By, Message. Submit opens the user's mail client prefilled to `kemissa@continuum.practice`; a toast confirms the message is prepared. No backend required.
+- Consolidated Contact right column — email block moved above the body paragraph; form now occupies the right column.
+
+### 2026-04-19 — Filip
 **Grammar pass on site copy**
 
 - Phase III description: "exceed" → "exceeds" (singular verb agrees with compound subject joined by "or"). `src/components/Services.tsx`, `src/pages/Services.tsx`.

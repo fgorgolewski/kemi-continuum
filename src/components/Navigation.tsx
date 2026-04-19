@@ -20,7 +20,7 @@ const Navigation = () => {
             PRACTICE
           </a>
           <a href="/contact" className="text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
-            ENQUIRY
+            INQUIRY
           </a>
         </div>
 
@@ -49,7 +49,7 @@ const Navigation = () => {
               PRACTICE
             </a>
             <a href="/contact" className="block text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
-              ENQUIRY
+              INQUIRY
             </a>
             
             {/* Mobile Theme Toggle */}
