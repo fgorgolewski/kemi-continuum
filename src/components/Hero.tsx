@@ -1,17 +1,6 @@
-import heroImage from "@/assets/hero-architecture.jpg";
-
 const Hero = () => {
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      />
-      
-      {/* Overlay */}
-      <div className="absolute inset-0 hero-overlay" />
-      
+    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
       {/* Content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
         <h1 className="text-6xl md:text-8xl lg:text-9xl font-light text-white text-architectural mb-4 reveal">
