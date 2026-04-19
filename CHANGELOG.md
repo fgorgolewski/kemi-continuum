@@ -15,6 +15,70 @@ _None._
 
 ## Log
 
+### 2026-04-19 — Val
+**Ops dashboard scaffold (hostname-gated, Supabase auth, Clients CRUD)**
+
+Week 1 foundation per `Ops Dashboard Build/build_plan.md`. No changes
+to marketing components — Hero, Services, About, Contact, Navigation
+and their pages are untouched.
+
+- **Hostname gating in `src/App.tsx`.** `isOpsHost()` reads
+  `window.location.hostname`. `ops.` subdomain serves the ops tree;
+  apex serves marketing. On localhost, append `?ops=1` to hit the
+  ops tree. The two trees do not share routes — the other returns
+  404 for any path.
+- **Supabase client** at `src/lib/supabase.ts`. Throws at import if
+  `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` are missing.
+  `.env.example` added.
+- **Auth context** at `src/providers/AuthProvider.tsx`; route guard
+  at `src/components/ops/RequireAuth.tsx`. Unauthed users on `/ops/*`
+  redirect to `/ops/login` with return-path in location state.
+- **`/ops/login`** — magic-link only. Single email input, "Send link"
+  button. No sign-up. Redirects back to the original route after
+  auth. Access is further narrowed by RLS (`public.is_ops_member()`
+  in schema v2) — non-allowlisted emails authenticate but see empty
+  lists.
+- **OpsLayout** at `src/layouts/OpsLayout.tsx`. Left sidebar + top
+  bar. Nav: Today / Clients / Annual Map / Wardrobe Ops / Welcome
+  Packages / Collaborators / Intensives / Financials. Initials
+  derived from email; sign-out in the top-right.
+- **Clients CRUD** (`src/pages/ops/Clients.tsx`) — first working
+  surface. List with phase + in-phase days. Dialog form for
+  create/edit. Fields: full_name, short_name, industry, phase,
+  referral_source, transition_context, intake_notes, no_go_list
+  (tag input). 5-client cap enforced in UI (disabled "New client"
+  at cap + toast on attempt) and in the DB (trigger in schema v2).
+  Sizing/preferences JSON editors deferred to a follow-up.
+- **Client detail** (`src/pages/ops/ClientDetail.tsx`) with tabs:
+  Profile (implemented), Annual Map / Wardrobe / Decisions /
+  Communications / Documents / Welcome / Intensives (placeholder
+  panels).
+- **Stub pages** for the remaining sidebar items —
+  `src/pages/ops/Stubs.tsx`. Each renders the surface title plus a
+  one-line note about when it lands. No fake data, no Lorem Ipsum.
+- **Query hooks** at `src/hooks/queries/useClients.ts` — list, by-id,
+  create, update, archive, and a cap helper (`useActiveClientCount`).
+- **Types** at `src/types/database.ts` — hand-authored mirror of
+  `supabase_schema_v2.sql`. Regenerate with `supabase gen types` once
+  the CLI is wired.
+- **Schemas** at `src/lib/schemas.ts` — zod form schema, labels, and
+  the `CLIENT_CAP = 5` constant.
+- **Dep added**: `@supabase/supabase-js@^2.45.0`. Run `npm install`
+  after pulling. No build config changes.
+
+**Voice:** no banned vocabulary anywhere in UI strings. Headers are
+functional ("Today", "Clients", not "Command Center" or "Roster").
+No exclamation points. No emoji.
+
+**Action required before merge:**
+- Paste `supabase_schema_v2.sql` into the Supabase SQL editor and run
+  the sanity checks at the bottom.
+- Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Cloudflare
+  Workers env vars (production + preview).
+- Invite `kemissa.racine@gmail.com`, `fgorgolewski@gmail.com`,
+  `val.adrien@gmail.com` in Supabase Auth.
+- Confirm `public.is_ops_member()` returns `true` for each operator.
+
 ### 2026-04-19 — Filip
 **Standardize on npm; delete bun lockfiles**
 
