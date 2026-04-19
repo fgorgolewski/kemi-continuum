@@ -16,6 +16,12 @@ _None._
 ## Log
 
 ### 2026-04-19 — Filip
+**Standardize on npm; delete bun lockfiles**
+
+- Removed `bun.lock` and `bun.lockb`. Cloudflare Pages was picking up bun and failing on `--frozen-lockfile`. Repo now uses npm only (via `package-lock.json`).
+- If you prefer bun locally, regenerate the lock after pulling, but don't commit it unless we flip the deploy to bun.
+
+### 2026-04-19 — Filip
 **Upgrade Vite 5 → 6**
 
 - Vite bumped to `^6.4.2` (was `^5.4.19`). Cloudflare Pages' Vite framework preset requires Vite 6+.
