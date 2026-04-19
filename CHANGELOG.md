@@ -16,6 +16,13 @@ _None._
 ## Log
 
 ### 2026-04-19 — Filip
+**Domain + deploy prep**
+
+- Replaced placeholder email with `kemissa@continuumbykemissa.com` in both Contact files and the copy docx.
+- Updated `index.html` OG and Twitter image URLs to `https://continuumbykemissa.com/og.jpg` and added `og:url`. Removed the leftover `twitter:site "@lovable_dev"` tag.
+- **Action required:** drop a `public/og.jpg` social-share image (1200×630 recommended) before deploying, or social previews will 404.
+
+### 2026-04-19 — Filip
 **Spelling + contact form**
 
 - Switched "Enquiry / Enquiries" → "Inquiry / Inquiries" site-wide: nav label (`src/components/Navigation.tsx`), Contact eyebrow + body (`src/components/Contact.tsx`, `src/pages/Contact.tsx`), and copy docx (`website-copy.docx`).

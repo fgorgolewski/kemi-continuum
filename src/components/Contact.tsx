@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
-const CONTACT_EMAIL = "kemissa@continuum.practice";
+const CONTACT_EMAIL = "kemissa@continuumbykemissa.com";
 
 const Contact = () => {
   const { toast } = useToast();
