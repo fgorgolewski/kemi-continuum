@@ -16,6 +16,12 @@ _None._
 ## Log
 
 ### 2026-04-19 — Filip
+**Strip Lovable-specific tooling**
+
+- Removed `lovable-tagger` (dev-only Vite plugin) from `package.json`, `vite.config.ts`, `package-lock.json`, and `bun.lock`. Build verified clean.
+- Rewrote `README.md` to document the Cloudflare Pages deploy and drop all Lovable references. Repo is now independent of Lovable.
+
+### 2026-04-19 — Filip
 **Domain + deploy prep**
 
 - Replaced placeholder email with `kemissa@continuumbykemissa.com` in both Contact files and the copy docx.
