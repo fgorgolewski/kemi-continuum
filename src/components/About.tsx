@@ -14,8 +14,8 @@ const About = () => {
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   Continuum is a private advisory practice. Clients delegate
                   decision-making, visual coherence, and presentation management.
-                  The practice removes the need to think through presentation
-                  independently.
+                  The practice removes the need to think through their
+                  presentation independently.
                 </p>
 
                 <p className="text-lg text-muted-foreground leading-relaxed">

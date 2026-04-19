@@ -16,6 +16,13 @@ _None._
 ## Log
 
 ### 2026-04-19 — Filip
+**Grammar pass on site copy**
+
+- Phase III description: "exceed" → "exceeds" (singular verb agrees with compound subject joined by "or"). `src/components/Services.tsx`, `src/pages/Services.tsx`.
+- Phase II description: "oversight of wardrobe" → "oversight of the wardrobe" (article added for parallel with "maintenance of the digital wardrobe" in same list). `src/components/Services.tsx`, `src/pages/Services.tsx`.
+- About body: "think through presentation independently" → "think through their presentation independently" (possessive added; matches brand-doc phrasing). `src/components/About.tsx`, `src/pages/About.tsx`.
+
+### 2026-04-19 — Filip
 **Commit:** `b9a299f` — Rewrite site copy to Continuum brand voice
 
 - Applied Continuum brand voice across all site copy (ARCH STUDIO placeholder removed).

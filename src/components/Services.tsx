@@ -10,13 +10,13 @@ const Services = () => {
       number: "II",
       title: "RETAINER",
       meta: "Ongoing",
-      description: "A standing system of judgment and control. Not task-based. Continuous oversight of wardrobe, real-time guidance, light sourcing, and maintenance of the digital wardrobe. Event and travel guidance within expected cadence."
+      description: "A standing system of judgment and control. Not task-based. Continuous oversight of the wardrobe, real-time guidance, light sourcing, and maintenance of the digital wardrobe. Event and travel guidance within expected cadence."
     },
     {
       number: "III",
       title: "INTENSIVES",
       meta: "Activated as required",
-      description: "Discrete engagements activated when scope, timeline, or visibility exceed retainer cadence. Structured and priced separately to preserve clarity and time control. Event-based styling, travel wardrobe planning, seasonal resets, expanded gifting, grooming systems."
+      description: "Discrete engagements activated when scope, timeline, or visibility exceeds retainer cadence. Structured and priced separately to preserve clarity and time control. Event-based styling, travel wardrobe planning, seasonal resets, expanded gifting, grooming systems."
     }
   ];
 
