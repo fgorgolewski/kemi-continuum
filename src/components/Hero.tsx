@@ -14,13 +14,16 @@ const Hero = () => {
       
       {/* Content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-light text-white text-architectural mb-8 reveal">
-          MINIMAL
+        <h1 className="text-6xl md:text-8xl lg:text-9xl font-light text-white text-architectural mb-4 reveal">
+          STYLE
           <br />
-          ARCHITECTURE
+          STEWARDSHIP
         </h1>
+        <p className="text-minimal text-white/70 mb-8 reveal-delayed">
+          by Kemissa
+        </p>
         <p className="text-xl md:text-2xl text-white/80 font-light tracking-wide max-w-2xl mx-auto reveal-delayed">
-          Creating spaces that inspire through thoughtful design and uncompromising quality
+          A private advisory practice for men whose presentation must remain coherent with their standing, environment, and trajectory.
         </p>
       </div>
       

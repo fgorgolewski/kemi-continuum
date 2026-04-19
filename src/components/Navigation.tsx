@@ -9,18 +9,18 @@ const Navigation = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <div className="text-minimal text-foreground">
-          ARCH STUDIO
+          CONTINUUM
         </div>
         
         <div className="hidden md:flex items-center space-x-12">
           <a href="/services" className="text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
-            SERVICES
+            ENGAGEMENT
           </a>
           <a href="/about" className="text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
-            ABOUT
+            PRACTICE
           </a>
           <a href="/contact" className="text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
-            CONTACT
+            ENQUIRY
           </a>
         </div>
 
@@ -43,13 +43,13 @@ const Navigation = () => {
         <div className="md:hidden bg-background border-b border-border">
           <div className="container mx-auto px-6 py-6 space-y-4">
             <a href="/services" className="block text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
-              SERVICES
+              ENGAGEMENT
             </a>
             <a href="/about" className="block text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
-              ABOUT
+              PRACTICE
             </a>
             <a href="/contact" className="block text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
-              CONTACT
+              ENQUIRY
             </a>
             
             {/* Mobile Theme Toggle */}
