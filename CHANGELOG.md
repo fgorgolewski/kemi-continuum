@@ -16,6 +16,12 @@ _None._
 ## Log
 
 ### 2026-04-19 — Filip
+**Upgrade Vite 5 → 6**
+
+- Vite bumped to `^6.4.2` (was `^5.4.19`). Cloudflare Pages' Vite framework preset requires Vite 6+.
+- No code changes needed. Build verified: 1.6s, same bundle (329KB JS / 11KB gzip CSS). Lockfiles regenerated (npm + bun).
+
+### 2026-04-19 — Filip
 **Strip Lovable-specific tooling**
 
 - Removed `lovable-tagger` (dev-only Vite plugin) from `package.json`, `vite.config.ts`, `package-lock.json`, and `bun.lock`. Build verified clean.
