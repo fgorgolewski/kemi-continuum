@@ -1,5 +1,4 @@
 import { useActiveClientCount } from "@/hooks/queries/useClients";
-import { CLIENT_CAP } from "@/lib/schemas";
 
 export function Today() {
   const { activeCount, isLoading } = useActiveClientCount();
@@ -10,7 +9,7 @@ export function Today() {
       <p className="text-sm text-muted-foreground mb-10">
         {isLoading
           ? "Loading roster."
-          : `${activeCount} of ${CLIENT_CAP} active clients.`}
+          : `${activeCount} active client${activeCount !== 1 ? "s" : ""}.`}
       </p>
       <div className="text-sm text-muted-foreground">
         Day view is intentionally minimal for now. Events, pending

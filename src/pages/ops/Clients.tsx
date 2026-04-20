@@ -7,7 +7,6 @@ import {
   useUpdateClient,
 } from "@/hooks/queries/useClients";
 import {
-  CLIENT_CAP,
   INDUSTRY_LABEL,
   PHASE_LABEL,
   clientFormSchema,
@@ -74,15 +73,7 @@ export function Clients() {
     [clients],
   );
 
-  const atCap = activeCount >= CLIENT_CAP;
-
   const openCreate = () => {
-    if (atCap) {
-      toast.error(
-        `Client cap reached (${CLIENT_CAP}). Archive one before adding another.`,
-      );
-      return;
-    }
     setValues(EMPTY_FORM);
     setNoGoInput("");
     setForm({ open: true, editing: null });
@@ -159,10 +150,10 @@ export function Clients() {
         <div>
           <h1 className="text-2xl font-serif">Clients</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {activeCount} of {CLIENT_CAP} active.
+            {activeCount} active.
           </p>
         </div>
-        <Button onClick={openCreate} disabled={atCap}>
+        <Button onClick={openCreate}>
           New client
         </Button>
       </div>

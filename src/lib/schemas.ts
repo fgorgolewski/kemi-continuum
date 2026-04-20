@@ -48,5 +48,3 @@ export const PHASE_LABEL: Record<z.infer<typeof clientPhaseSchema>, string> = {
   paused: "Paused",
   archived: "Archived",
 };
-
-export const CLIENT_CAP = 5;

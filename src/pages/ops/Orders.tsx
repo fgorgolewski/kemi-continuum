@@ -24,10 +24,11 @@ import type {
 import {
   getShippingRates,
   purchaseLabel,
+  trackShipment,
   DEFAULT_PARCEL,
   KEMISSA_ADDRESS,
 } from "@/lib/shippo";
-import type { ShippoRate, ShippoAddress } from "@/lib/shippo";
+import type { ShippoRate, ShippoAddress, ShippoTrackingResult } from "@/lib/shippo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -67,11 +68,13 @@ function OrderCard({
   onAdvance,
   onEdit,
   onBookShipping,
+  onTrack,
 }: {
   order: OrderRow;
   onAdvance: () => void;
   onEdit: () => void;
   onBookShipping?: () => void;
+  onTrack?: () => void;
 }) {
   const next = nextStage(order.status);
   const stageTs = order[`${order.status}_at` as keyof OrderRow] as string | null;
@@ -137,6 +140,16 @@ function OrderCard({
               <Truck className="h-3 w-3" /> Book
             </Button>
           )}
+          {order.tracking_number && onTrack && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-6 px-2 text-[0.65rem] gap-1"
+              onClick={onTrack}
+            >
+              <Package className="h-3 w-3" /> Track
+            </Button>
+          )}
           {order.shipping_label_url && (
             <a
               href={order.shipping_label_url}
@@ -176,12 +189,14 @@ function PipelineColumn({
   onAdvance,
   onEdit,
   onBookShipping,
+  onTrack,
 }: {
   stage: OrderStatus;
   orders: OrderRow[];
   onAdvance: (id: string) => void;
   onEdit: (order: OrderRow) => void;
   onBookShipping: (order: OrderRow) => void;
+  onTrack: (order: OrderRow) => void;
 }) {
   return (
     <div className="flex flex-col min-w-[13rem] max-w-[15rem] flex-1">
@@ -203,6 +218,9 @@ function PipelineColumn({
                 order.status === "repacked"
                   ? () => onBookShipping(order)
                   : undefined
+              }
+              onTrack={
+                order.tracking_number ? () => onTrack(order) : undefined
               }
             />
           ))}
@@ -761,6 +779,149 @@ function ShippingDialog({
   );
 }
 
+/* ────────────────────── Tracking Dialog ────────────────────── */
+
+function TrackingDialog({
+  order,
+  onClose,
+}: {
+  order: OrderRow | null;
+  onClose: () => void;
+}) {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<ShippoTrackingResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleTrack = async () => {
+    if (!order?.tracking_number || !order?.carrier) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await trackShipment(order.carrier, order.tracking_number);
+      setResult(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Tracking failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Auto-track on open
+  useState(() => {
+    if (order?.tracking_number && order?.carrier) {
+      handleTrack();
+    }
+  });
+
+  if (!order) return null;
+
+  return (
+    <Dialog open={!!order} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>
+            Tracking — {order.client_name}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-muted-foreground">Tracking #:</span>
+            <span className="font-mono">{order.tracking_number}</span>
+          </div>
+          {order.carrier && (
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">Carrier:</span>
+              <span>{CARRIER_LABEL[order.carrier]}</span>
+            </div>
+          )}
+
+          {loading && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground py-4 justify-center">
+              <Loader2 className="h-4 w-4 animate-spin" /> Fetching tracking info...
+            </div>
+          )}
+
+          {error && (
+            <div className="text-sm text-red-600 bg-red-50 dark:bg-red-950/30 rounded p-3">
+              {error}
+            </div>
+          )}
+
+          {result && (
+            <>
+              {result.tracking_status && (
+                <div className="border border-border/50 rounded-lg p-3">
+                  <div className="text-sm font-medium capitalize">
+                    {result.tracking_status.status_details || result.tracking_status.status}
+                  </div>
+                  {result.tracking_status.location && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {[
+                        result.tracking_status.location.city,
+                        result.tracking_status.location.state,
+                        result.tracking_status.location.country,
+                      ]
+                        .filter(Boolean)
+                        .join(", ")}
+                    </div>
+                  )}
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {result.tracking_status.status_date
+                      ? format(parseISO(result.tracking_status.status_date), "MMM d, h:mm a")
+                      : ""}
+                  </div>
+                </div>
+              )}
+
+              {result.eta && (
+                <div className="text-sm">
+                  <span className="text-muted-foreground">ETA: </span>
+                  {format(parseISO(result.eta), "EEEE, MMMM d")}
+                </div>
+              )}
+
+              {result.tracking_history.length > 0 && (
+                <div className="space-y-0">
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
+                    History
+                  </div>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {result.tracking_history.map((event, i) => (
+                      <div
+                        key={i}
+                        className="flex gap-3 text-xs border-l-2 border-border/40 pl-3 py-1"
+                      >
+                        <div className="text-muted-foreground whitespace-nowrap">
+                          {event.status_date
+                            ? format(parseISO(event.status_date), "MMM d, h:mm a")
+                            : ""}
+                        </div>
+                        <div>{event.status_details || event.status}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        <DialogFooter>
+          {!loading && (
+            <Button variant="ghost" size="sm" onClick={handleTrack}>
+              Refresh
+            </Button>
+          )}
+          <Button size="sm" onClick={onClose}>
+            Close
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 /* ────────────────────── Main Orders Page ────────────────────── */
 
 export function Orders() {
@@ -769,6 +930,7 @@ export function Orders() {
 
   const [form, setForm] = useState<FormState>({ open: false, editing: null });
   const [shippingOrder, setShippingOrder] = useState<OrderRow | null>(null);
+  const [trackingOrder, setTrackingOrder] = useState<OrderRow | null>(null);
 
   const byStage = useMemo(() => {
     const grouped: Record<OrderStatus, OrderRow[]> = {
@@ -807,6 +969,8 @@ export function Orders() {
   const closeForm = () => setForm({ open: false, editing: null });
   const openBookShipping = (order: OrderRow) => setShippingOrder(order);
   const closeBookShipping = () => setShippingOrder(null);
+  const openTracking = (order: OrderRow) => setTrackingOrder(order);
+  const closeTracking = () => setTrackingOrder(null);
 
   return (
     <div className="h-[calc(100vh-7.5rem)]">
@@ -835,6 +999,7 @@ export function Orders() {
               onAdvance={handleAdvance}
               onEdit={openEdit}
               onBookShipping={openBookShipping}
+              onTrack={openTracking}
             />
           ))}
         </div>
@@ -842,6 +1007,7 @@ export function Orders() {
 
       <OrderDialog form={form} onClose={closeForm} />
       <ShippingDialog order={shippingOrder} onClose={closeBookShipping} />
+      <TrackingDialog order={trackingOrder} onClose={closeTracking} />
     </div>
   );
 }
