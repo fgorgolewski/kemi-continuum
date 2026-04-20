@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { DilaWidget } from "@/components/ops/assistant/DilaWidget";
-import { ChevronDown } from "lucide-react";
 
 interface NavItem {
   to: string;
@@ -54,16 +53,19 @@ function initialsFor(email: string | undefined | null): string {
   return `${first}${dot}`.slice(0, 2) || first || "—";
 }
 
-function NavLinkItem({ item }: { item: NavItem }) {
+function NavLinkItem({ item, nested }: { item: NavItem; nested?: boolean }) {
   return (
     <NavLink
       to={item.to}
       end={item.end}
       className={({ isActive }) =>
         [
-          "px-2 py-1.5 rounded",
+          "block py-1.5 transition-colors duration-200",
+          nested ? "px-0" : "px-2 rounded",
           isActive
-            ? "bg-muted text-foreground"
+            ? nested
+              ? "text-foreground"
+              : "bg-muted text-foreground"
             : "text-muted-foreground hover:text-foreground",
         ].join(" ")
       }
@@ -79,33 +81,58 @@ function NavGroupItem({ group }: { group: NavGroup }) {
     location.pathname.startsWith(c.to),
   );
   const [open, setOpen] = useState(childActive);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setHeight(contentRef.current.scrollHeight);
+    }
+  }, [open]);
+
+  // Auto-open when a child becomes active
+  useEffect(() => {
+    if (childActive && !open) setOpen(true);
+  }, [childActive]);
 
   return (
-    <div>
+    <div className="mt-1">
       <button
         onClick={() => setOpen((v) => !v)}
         className={[
-          "w-full flex items-center justify-between px-2 py-1.5 rounded text-left",
+          "w-full px-2 py-1.5 rounded text-left transition-colors duration-200",
+          "text-[0.65rem] uppercase tracking-[0.15em] font-medium",
           childActive
             ? "text-foreground"
-            : "text-muted-foreground hover:text-foreground",
+            : "text-muted-foreground/70 hover:text-muted-foreground",
         ].join(" ")}
       >
         {group.label}
-        <ChevronDown
-          className={[
-            "h-3.5 w-3.5 transition-transform",
-            open ? "rotate-0" : "-rotate-90",
-          ].join(" ")}
-        />
       </button>
-      {open && (
-        <div className="flex flex-col gap-0.5 ml-3 mt-0.5 border-l border-border/40 pl-2">
-          {group.children.map((child) => (
-            <NavLinkItem key={child.to} item={child} />
+
+      <div
+        style={{
+          maxHeight: open ? `${height}px` : "0px",
+          opacity: open ? 1 : 0,
+        }}
+        className="overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+      >
+        <div ref={contentRef} className="flex flex-col gap-0.5 pl-4 pb-1">
+          {group.children.map((child, i) => (
+            <div
+              key={child.to}
+              style={{
+                transitionDelay: open ? `${i * 40}ms` : "0ms",
+                opacity: open ? 1 : 0,
+                transform: open ? "translateX(0)" : "translateX(-6px)",
+              }}
+              className="transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            >
+              <NavLinkItem item={child} nested />
+            </div>
           ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -127,7 +154,7 @@ export function OpsLayout() {
         <div className="text-[0.7rem] uppercase tracking-[0.2em] text-muted-foreground">
           Continuum Ops
         </div>
-        <nav className="flex flex-col gap-1 text-sm">
+        <nav className="flex flex-col gap-0.5 text-sm">
           {NAV.map((entry) =>
             isGroup(entry) ? (
               <NavGroupItem key={entry.label} group={entry} />
