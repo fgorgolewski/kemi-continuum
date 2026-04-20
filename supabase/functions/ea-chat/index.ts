@@ -12,6 +12,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const SYSTEM_PROMPT = `You are Dila — Kemissa's executive assistant. You are a world-class AI assistant for Kemissa, a luxury personal styling and wardrobe consultancy.
@@ -344,14 +345,16 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Auth — extract user from JWT
-    const authHeader = req.headers.get("authorization") ?? "";
-    const token = authHeader.replace("Bearer ", "");
-    const userClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    // Auth — verify user via their JWT
+    const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: {
+        headers: { Authorization: req.headers.get("Authorization")! },
+      },
+    });
     const {
       data: { user },
       error: authError,
-    } = await userClient.auth.getUser(token);
+    } = await userClient.auth.getUser();
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
