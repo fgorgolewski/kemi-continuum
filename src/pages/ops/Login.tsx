@@ -12,9 +12,11 @@ export function OpsLogin() {
   const { session, loading } = useAuth();
   const location = useLocation();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState<string | null>(null);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [pwLoading, setPwLoading] = useState(false);
 
   if (!loading && session) {
     const from = (location.state as { from?: string } | null)?.from ?? "/ops";
@@ -38,8 +40,29 @@ export function OpsLogin() {
     // On success the browser is redirected to Google; no further state updates needed.
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handlePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPwLoading(true);
+    setMessage(null);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+    if (error) {
+      setPwLoading(false);
+      setStatus("error");
+      setMessage(error.message);
+      return;
+    }
+    // onAuthStateChange updates the session; the Navigate above redirects to /ops.
+  };
+
+  const handleMagicLink = async () => {
+    if (!email) {
+      setStatus("error");
+      setMessage("Enter an email first.");
+      return;
+    }
     setStatus("sending");
     setMessage(null);
     const { error } = await supabase.auth.signInWithOtp({
@@ -109,12 +132,12 @@ export function OpsLogin() {
         <div className="flex items-center gap-3 my-6">
           <div className="h-px flex-1 bg-border" />
           <span className="text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
-            or email link
+            or with password
           </span>
           <div className="h-px flex-1 bg-border" />
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handlePassword} className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -124,12 +147,36 @@ export function OpsLogin() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={status === "sending" || status === "sent"}
+              disabled={pwLoading}
             />
           </div>
-          <Button type="submit" disabled={status === "sending" || status === "sent" || !email}>
-            {status === "sending" ? "Sending..." : status === "sent" ? "Sent" : "Send link"}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={pwLoading}
+            />
+          </div>
+          <Button type="submit" disabled={pwLoading || !email || !password}>
+            {pwLoading ? "Signing in..." : "Sign in"}
           </Button>
+          <button
+            type="button"
+            onClick={handleMagicLink}
+            disabled={status === "sending" || status === "sent"}
+            className="text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline self-center"
+          >
+            {status === "sending"
+              ? "Sending link..."
+              : status === "sent"
+              ? "Link sent"
+              : "Or email me a sign-in link"}
+          </button>
           {message && (
             <p
               className={
