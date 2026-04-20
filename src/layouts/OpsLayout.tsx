@@ -39,6 +39,7 @@ const NAV: NavEntry[] = [
   {
     label: "Business",
     children: [
+      { to: "/ops/vendors", label: "Vendors" },
       { to: "/ops/collaborators", label: "Collaborators" },
       { to: "/ops/financials", label: "Financials" },
     ],
