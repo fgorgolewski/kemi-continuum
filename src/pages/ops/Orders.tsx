@@ -21,6 +21,13 @@ import type {
   DeliveryType,
   Carrier,
 } from "@/types/orders";
+import {
+  getShippingRates,
+  purchaseLabel,
+  DEFAULT_PARCEL,
+  KEMISSA_ADDRESS,
+} from "@/lib/shippo";
+import type { ShippoRate, ShippoAddress } from "@/lib/shippo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,6 +56,7 @@ import {
   Pen,
   ExternalLink,
   Star,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -58,10 +66,12 @@ function OrderCard({
   order,
   onAdvance,
   onEdit,
+  onBookShipping,
 }: {
   order: OrderRow;
   onAdvance: () => void;
   onEdit: () => void;
+  onBookShipping?: () => void;
 }) {
   const next = nextStage(order.status);
   const stageTs = order[`${order.status}_at` as keyof OrderRow] as string | null;
@@ -116,16 +126,43 @@ function OrderCard({
             ? formatDistanceToNow(parseISO(stageTs), { addSuffix: true })
             : ""}
         </span>
-        {next && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 px-2 text-[0.65rem] gap-1"
-            onClick={onAdvance}
-          >
-            {STAGE_LABEL[next]} <ChevronRight className="h-3 w-3" />
-          </Button>
-        )}
+        <div className="flex gap-1">
+          {order.status === "repacked" && onBookShipping && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-6 px-2 text-[0.65rem] gap-1"
+              onClick={onBookShipping}
+            >
+              <Truck className="h-3 w-3" /> Book
+            </Button>
+          )}
+          {order.shipping_label_url && (
+            <a
+              href={order.shipping_label_url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 px-2 text-[0.65rem] gap-1"
+              >
+                <ExternalLink className="h-3 w-3" /> Label
+              </Button>
+            </a>
+          )}
+          {next && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 px-2 text-[0.65rem] gap-1"
+              onClick={onAdvance}
+            >
+              {STAGE_LABEL[next]} <ChevronRight className="h-3 w-3" />
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -138,11 +175,13 @@ function PipelineColumn({
   orders,
   onAdvance,
   onEdit,
+  onBookShipping,
 }: {
   stage: OrderStatus;
   orders: OrderRow[];
   onAdvance: (id: string) => void;
   onEdit: (order: OrderRow) => void;
+  onBookShipping: (order: OrderRow) => void;
 }) {
   return (
     <div className="flex flex-col min-w-[13rem] max-w-[15rem] flex-1">
@@ -160,6 +199,11 @@ function PipelineColumn({
               order={order}
               onAdvance={() => onAdvance(order.id)}
               onEdit={() => onEdit(order)}
+              onBookShipping={
+                order.status === "repacked"
+                  ? () => onBookShipping(order)
+                  : undefined
+              }
             />
           ))}
           {orders.length === 0 && (
@@ -424,6 +468,299 @@ function OrderDialog({
   );
 }
 
+/* ────────────────────── Shipping Dialog (Shippo) ────────────────────── */
+
+function ShippingDialog({
+  order,
+  onClose,
+}: {
+  order: OrderRow | null;
+  onClose: () => void;
+}) {
+  const update = useUpdateOrder();
+  const advanceOrder = useAdvanceOrder();
+  const [step, setStep] = useState<"address" | "rates" | "done">("address");
+  const [loading, setLoading] = useState(false);
+  const [rates, setRates] = useState<ShippoRate[]>([]);
+  const [selectedRate, setSelectedRate] = useState<string>("");
+  const [address, setAddress] = useState<ShippoAddress>({
+    name: order?.client_name ?? "",
+    street1: "",
+    city: "",
+    state: "",
+    zip: "",
+    country: "US",
+  });
+  const [labelResult, setLabelResult] = useState<{
+    tracking_number: string;
+    label_url: string;
+  } | null>(null);
+
+  if (!order) return null;
+
+  const handleGetRates = async () => {
+    if (!address.street1 || !address.city || !address.zip) {
+      toast.error("Please fill in the delivery address.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const result = await getShippingRates(
+        KEMISSA_ADDRESS,
+        address,
+        DEFAULT_PARCEL,
+      );
+      setRates(result.rates);
+      if (result.rates.length > 0) {
+        setSelectedRate(result.rates[0].object_id);
+      }
+      setStep("rates");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to get rates.";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePurchaseLabel = async () => {
+    if (!selectedRate) return;
+    setLoading(true);
+    try {
+      const label = await purchaseLabel(selectedRate);
+
+      // Update the order with shipping details
+      await update.mutateAsync({
+        id: order.id,
+        patch: {
+          tracking_number: label.tracking_number,
+          shipping_label_url: label.label_url,
+          carrier: (label.carrier as Carrier) ?? "shippo",
+        },
+      });
+
+      // Advance to shipping_booked
+      await advanceOrder.mutateAsync({
+        id: order.id,
+        nextStatus: "shipping_booked",
+      });
+
+      setLabelResult({
+        tracking_number: label.tracking_number,
+        label_url: label.label_url,
+      });
+      setStep("done");
+      toast.success("Shipping booked! Label ready.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to book shipping.";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={!!order} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>
+            Book Shipping — {order.client_name}
+          </DialogTitle>
+        </DialogHeader>
+
+        {step === "address" && (
+          <div className="flex flex-col gap-4">
+            <p className="text-sm text-muted-foreground">
+              Enter the delivery address. All shipments require signature.
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5 col-span-2">
+                <Label htmlFor="ship_name">Recipient name</Label>
+                <Input
+                  id="ship_name"
+                  value={address.name}
+                  onChange={(e) =>
+                    setAddress({ ...address, name: e.target.value })
+                  }
+                />
+              </div>
+              <div className="flex flex-col gap-1.5 col-span-2">
+                <Label htmlFor="ship_street">Street address</Label>
+                <Input
+                  id="ship_street"
+                  value={address.street1}
+                  onChange={(e) =>
+                    setAddress({ ...address, street1: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="ship_city">City</Label>
+                <Input
+                  id="ship_city"
+                  value={address.city}
+                  onChange={(e) =>
+                    setAddress({ ...address, city: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="ship_state">State</Label>
+                <Input
+                  id="ship_state"
+                  value={address.state}
+                  onChange={(e) =>
+                    setAddress({ ...address, state: e.target.value })
+                  }
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="ship_zip">ZIP / Postal code</Label>
+                <Input
+                  id="ship_zip"
+                  value={address.zip}
+                  onChange={(e) =>
+                    setAddress({ ...address, zip: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="ship_country">Country</Label>
+                <Input
+                  id="ship_country"
+                  value={address.country}
+                  onChange={(e) =>
+                    setAddress({ ...address, country: e.target.value })
+                  }
+                />
+              </div>
+              <div className="flex flex-col gap-1.5 col-span-2">
+                <Label htmlFor="ship_phone">Phone (for delivery)</Label>
+                <Input
+                  id="ship_phone"
+                  value={address.phone ?? ""}
+                  onChange={(e) =>
+                    setAddress({ ...address, phone: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="ghost" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button onClick={handleGetRates} disabled={loading}>
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                ) : (
+                  <Package className="h-4 w-4 mr-1" />
+                )}
+                Get Rates
+              </Button>
+            </DialogFooter>
+          </div>
+        )}
+
+        {step === "rates" && (
+          <div className="flex flex-col gap-4">
+            <p className="text-sm text-muted-foreground">
+              {rates.length} rate{rates.length !== 1 ? "s" : ""} found.
+              All include signature confirmation.
+            </p>
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {rates.map((rate) => (
+                <label
+                  key={rate.object_id}
+                  className={[
+                    "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
+                    selectedRate === rate.object_id
+                      ? "border-primary bg-primary/5"
+                      : "border-border/50 hover:border-border",
+                  ].join(" ")}
+                >
+                  <input
+                    type="radio"
+                    name="rate"
+                    value={rate.object_id}
+                    checked={selectedRate === rate.object_id}
+                    onChange={() => setSelectedRate(rate.object_id)}
+                    className="accent-primary"
+                  />
+                  <div className="flex-1">
+                    <div className="text-sm font-medium">
+                      {rate.provider} — {rate.service_level}
+                    </div>
+                    {rate.estimated_days && (
+                      <div className="text-xs text-muted-foreground">
+                        {rate.estimated_days} business day{rate.estimated_days > 1 ? "s" : ""}
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-sm font-mono">
+                    ${parseFloat(rate.amount).toFixed(2)}
+                  </div>
+                </label>
+              ))}
+              {rates.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No rates available. Check the addresses and try again.
+                </p>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setStep("address")}>
+                Back
+              </Button>
+              <Button
+                onClick={handlePurchaseLabel}
+                disabled={!selectedRate || loading}
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                ) : (
+                  <Truck className="h-4 w-4 mr-1" />
+                )}
+                Purchase Label
+              </Button>
+            </DialogFooter>
+          </div>
+        )}
+
+        {step === "done" && labelResult && (
+          <div className="flex flex-col gap-4 items-center text-center py-4">
+            <div className="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+              <Package className="h-6 w-6 text-green-600" />
+            </div>
+            <div>
+              <h3 className="font-medium">Shipping Booked</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Tracking: <span className="font-mono">{labelResult.tracking_number}</span>
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <a
+                href={labelResult.label_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="outline" size="sm">
+                  <ExternalLink className="h-3.5 w-3.5 mr-1" /> Download Label
+                </Button>
+              </a>
+              <Button size="sm" onClick={onClose}>
+                Done
+              </Button>
+            </div>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 /* ────────────────────── Main Orders Page ────────────────────── */
 
 export function Orders() {
@@ -431,6 +768,7 @@ export function Orders() {
   const advance = useAdvanceOrder();
 
   const [form, setForm] = useState<FormState>({ open: false, editing: null });
+  const [shippingOrder, setShippingOrder] = useState<OrderRow | null>(null);
 
   const byStage = useMemo(() => {
     const grouped: Record<OrderStatus, OrderRow[]> = {
@@ -467,6 +805,8 @@ export function Orders() {
   const openCreate = () => setForm({ open: true, editing: null });
   const openEdit = (order: OrderRow) => setForm({ open: true, editing: order });
   const closeForm = () => setForm({ open: false, editing: null });
+  const openBookShipping = (order: OrderRow) => setShippingOrder(order);
+  const closeBookShipping = () => setShippingOrder(null);
 
   return (
     <div className="h-[calc(100vh-7.5rem)]">
@@ -494,12 +834,14 @@ export function Orders() {
               orders={byStage[stage]}
               onAdvance={handleAdvance}
               onEdit={openEdit}
+              onBookShipping={openBookShipping}
             />
           ))}
         </div>
       )}
 
       <OrderDialog form={form} onClose={closeForm} />
+      <ShippingDialog order={shippingOrder} onClose={closeBookShipping} />
     </div>
   );
 }
