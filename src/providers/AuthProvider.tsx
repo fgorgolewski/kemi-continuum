@@ -8,22 +8,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let active = true;
-
-    supabase.auth.getSession().then(({ data }) => {
-      if (!active) return;
-      setSession(data.session);
-      setLoading(false);
-    });
-
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
+    // Use onAuthStateChange as the single source of truth.
+    // The INITIAL_SESSION event fires AFTER processing any OAuth
+    // tokens in the URL hash, avoiding the race condition where
+    // getSession() resolves before the hash is parsed.
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, next) => {
       setSession(next);
+      if (event === "INITIAL_SESSION") {
+        setLoading(false);
+      }
     });
 
-    return () => {
-      active = false;
-      sub.subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
   const signOut = async () => {

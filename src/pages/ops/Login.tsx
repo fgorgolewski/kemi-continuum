@@ -26,10 +26,15 @@ export function OpsLogin() {
   const handleGoogle = async () => {
     setGoogleLoading(true);
     setMessage(null);
+    // Preserve ?ops=1 for localhost dev so the redirect lands on OpsRoutes
+    const redirectUrl = new URL("/ops", window.location.origin);
+    if (new URLSearchParams(window.location.search).get("ops") === "1") {
+      redirectUrl.searchParams.set("ops", "1");
+    }
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/ops`,
+        redirectTo: redirectUrl.toString(),
       },
     });
     if (error) {
