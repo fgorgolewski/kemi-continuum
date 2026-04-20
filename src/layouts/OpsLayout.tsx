@@ -7,6 +7,7 @@ const NAV = [
   { to: "/ops", label: "Today", end: true },
   { to: "/ops/dila", label: "Dila" },
   { to: "/ops/clients", label: "Clients" },
+  { to: "/ops/orders", label: "Orders" },
   { to: "/ops/annual-map", label: "Annual Map" },
   { to: "/ops/wardrobe", label: "Wardrobe Ops" },
   { to: "/ops/welcome-packages", label: "Welcome Packages" },

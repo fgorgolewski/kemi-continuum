@@ -18,6 +18,7 @@ import { Today } from "@/pages/ops/Today";
 import { Clients } from "@/pages/ops/Clients";
 import { ClientDetail } from "@/pages/ops/ClientDetail";
 import { Assistant } from "@/pages/ops/Assistant";
+import { Orders } from "@/pages/ops/Orders";
 import {
   AnnualMap,
   WardrobeOps,
@@ -87,6 +88,7 @@ function OpsRoutes() {
         <Route path="/ops/dila" element={<Assistant />} />
         <Route path="/ops/clients" element={<Clients />} />
         <Route path="/ops/clients/:id" element={<ClientDetail />} />
+        <Route path="/ops/orders" element={<Orders />} />
         <Route path="/ops/annual-map" element={<AnnualMap />} />
         <Route path="/ops/wardrobe" element={<WardrobeOps />} />
         <Route path="/ops/welcome-packages" element={<WelcomePackages />} />
