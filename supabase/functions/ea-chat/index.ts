@@ -345,22 +345,22 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Auth — verify user via their JWT
-    const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      global: {
-        headers: { Authorization: req.headers.get("Authorization")! },
+    // Auth — verify user by calling Supabase Auth API directly
+    // (bypasses JS client which doesn't support ES256 JWTs)
+    const authHeader = req.headers.get("Authorization") ?? "";
+    const authRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: {
+        Authorization: authHeader,
+        apikey: SUPABASE_ANON_KEY,
       },
     });
-    const {
-      data: { user },
-      error: authError,
-    } = await userClient.auth.getUser();
-    if (authError || !user) {
+    if (!authRes.ok) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { "Content-Type": "application/json" },
       });
     }
+    const user = await authRes.json();
 
     const { messages } = await req.json();
 
