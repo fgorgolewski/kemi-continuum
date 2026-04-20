@@ -2,110 +2,136 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Continuum Design System */
+/* Kemissa Continuum Design System
+   See DESIGN.md for full specification.
+   Warm palette · Instrument Serif · DM Sans · Geist Mono */
 
 @layer base {
   :root {
-    /* Pure Architecture Palette */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
-    
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
-    
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    
-    /* Primary: Pure Black */
-    --primary: 0 0% 0%;
-    --primary-foreground: 0 0% 100%;
-    
-    /* Secondary: Pure White */
-    --secondary: 0 0% 100%;
-    --secondary-foreground: 0 0% 0%;
-    
-    /* Muted: Subtle Gray */
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 20%;
-    
-    /* Accent: Elegant Gray */
-    --accent: 0 0% 95%;
-    --accent-foreground: 0 0% 0%;
-    
-    --destructive: 0 84.2% 60.2%;
+    /* Warm foundations — not pure gray */
+    --background: 40 20% 100%;
+    --foreground: 30 10% 4%;
+
+    --card: 37 18% 99%;
+    --card-foreground: 30 10% 4%;
+
+    --popover: 40 20% 100%;
+    --popover-foreground: 30 10% 4%;
+
+    /* Primary: near-black with warmth */
+    --primary: 30 10% 4%;
+    --primary-foreground: 37 18% 99%;
+
+    /* Secondary */
+    --secondary: 37 18% 97%;
+    --secondary-foreground: 30 10% 4%;
+
+    /* Muted: warm gray, not cold */
+    --muted: 35 12% 96%;
+    --muted-foreground: 28 8% 40%;
+
+    /* Accent: warm surface */
+    --accent: 35 12% 95%;
+    --accent-foreground: 30 10% 4%;
+
+    /* Stone — the Kemissa accent */
+    --stone: 28 14% 55%;
+    --stone-light: 28 12% 72%;
+    --stone-dark: 28 14% 43%;
+
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    
-    --border: 0 0% 90%;
-    --input: 0 0% 95%;
-    --ring: 0 0% 0%;
+
+    /* Semantic */
+    --success: 134 22% 46%;
+    --warning: 38 47% 50%;
+    --error: 0 38% 53%;
+    --info: 200 22% 46%;
+
+    /* Warm borders */
+    --border: 30 12% 90%;
+    --border-subtle: 30 10% 94%;
+    --input: 35 12% 95%;
+    --ring: 28 14% 55%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Sidebar */
+    --sidebar-background: 35 14% 98%;
+    --sidebar-foreground: 28 8% 40%;
+    --sidebar-primary: 30 10% 4%;
+    --sidebar-primary-foreground: 37 18% 99%;
+    --sidebar-accent: 35 12% 95%;
+    --sidebar-accent-foreground: 30 10% 4%;
+    --sidebar-border: 30 12% 90%;
+    --sidebar-ring: 28 14% 55%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-    
     /* Architecture Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 0% / 0.8), hsl(0 0% 0% / 0.4));
-    --gradient-overlay: linear-gradient(180deg, hsl(0 0% 0% / 0.9), hsl(0 0% 0% / 0.1));
-    
-    /* Elegant Shadows */
-    --shadow-architectural: 0 25px 50px -12px hsl(0 0% 0% / 0.25);
-    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.15);
-    
-    /* Smooth Transitions */
+    --gradient-hero: linear-gradient(135deg, hsl(30 10% 4% / 0.85), hsl(30 10% 4% / 0.4));
+    --gradient-overlay: linear-gradient(180deg, hsl(30 10% 4% / 0.9), hsl(30 10% 4% / 0.1));
+
+    /* Elegant Shadows — warm-tinted */
+    --shadow-architectural: 0 25px 50px -12px hsl(30 10% 4% / 0.2);
+    --shadow-elegant: 0 10px 30px -10px hsl(30 10% 4% / 0.12);
+
+    /* Motion */
     --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     --transition-fast: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 100%;
-    
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 100%;
-    
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 100%;
-    
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 60%;
-    
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 100%;
-    
-    --destructive: 0 84.2% 60.2%;
+    --background: 25 10% 4%;
+    --foreground: 35 12% 96%;
+
+    --card: 25 10% 6%;
+    --card-foreground: 35 12% 96%;
+
+    --popover: 25 10% 6%;
+    --popover-foreground: 35 12% 96%;
+
+    --primary: 35 12% 96%;
+    --primary-foreground: 25 10% 4%;
+
+    --secondary: 25 8% 10%;
+    --secondary-foreground: 35 12% 96%;
+
+    --muted: 25 8% 10%;
+    --muted-foreground: 28 8% 55%;
+
+    --accent: 25 8% 14%;
+    --accent-foreground: 35 12% 96%;
+
+    --stone: 28 12% 65%;
+    --stone-light: 28 14% 55%;
+    --stone-dark: 28 12% 75%;
+
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    
-    --border: 0 0% 15%;
-    --input: 0 0% 10%;
-    --ring: 0 0% 100%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --success: 134 22% 56%;
+    --warning: 38 47% 60%;
+    --error: 0 38% 60%;
+    --info: 200 22% 56%;
+
+    --border: 25 8% 16%;
+    --border-subtle: 25 6% 12%;
+    --input: 25 8% 10%;
+    --ring: 28 12% 65%;
+
+    --sidebar-background: 25 10% 6%;
+    --sidebar-foreground: 28 8% 55%;
+    --sidebar-primary: 35 12% 96%;
+    --sidebar-primary-foreground: 25 10% 4%;
+    --sidebar-accent: 25 8% 14%;
+    --sidebar-accent-foreground: 35 12% 96%;
+    --sidebar-border: 25 8% 16%;
+    --sidebar-ring: 28 12% 65%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(25 10% 4% / 0.9), hsl(25 10% 4% / 0.5));
+    --gradient-overlay: linear-gradient(180deg, hsl(25 10% 4% / 0.95), hsl(25 10% 4% / 0.1));
+
+    --shadow-architectural: 0 25px 50px -12px hsl(0 0% 0% / 0.5);
+    --shadow-elegant: 0 10px 30px -10px hsl(0 0% 0% / 0.3);
   }
 }
 
@@ -117,32 +143,32 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
-  
+
   /* Architectural Typography */
   .text-architectural {
     @apply tracking-[-0.02em] leading-[1.1];
   }
-  
+
   .text-minimal {
     @apply tracking-wide uppercase text-xs font-medium;
   }
-  
+
   /* Hero Image Overlay */
   .hero-overlay {
     background: var(--gradient-overlay);
   }
-  
+
   /* Smooth Reveal Animation */
   .reveal {
     @apply opacity-0 translate-y-8;
     animation: reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-  
+
   .reveal-delayed {
     @apply opacity-0 translate-y-8;
     animation: reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
   }
-  
+
   @keyframes reveal {
     to {
       @apply opacity-100 translate-y-0;

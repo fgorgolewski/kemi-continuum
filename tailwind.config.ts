@@ -12,6 +12,11 @@ export default {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+      serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+      mono: ['"Geist Mono"', 'monospace'],
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
