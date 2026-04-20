@@ -1,9 +1,11 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { DilaWidget } from "@/components/ops/assistant/DilaWidget";
 
 const NAV = [
   { to: "/ops", label: "Today", end: true },
+  { to: "/ops/dila", label: "Dila" },
   { to: "/ops/clients", label: "Clients" },
   { to: "/ops/annual-map", label: "Annual Map" },
   { to: "/ops/wardrobe", label: "Wardrobe Ops" },
@@ -24,6 +26,8 @@ function initialsFor(email: string | undefined | null): string {
 export function OpsLayout() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const onDilaPage = location.pathname === "/ops/dila";
 
   const handleSignOut = async () => {
     await signOut();
@@ -73,6 +77,9 @@ export function OpsLayout() {
           <Outlet />
         </main>
       </div>
+
+      {/* Floating Dila chat — hidden on the full Dila page */}
+      {!onDilaPage && <DilaWidget />}
     </div>
   );
 }
