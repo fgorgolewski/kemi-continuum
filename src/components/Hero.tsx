@@ -12,7 +12,7 @@ const Hero = () => {
           by Kemissa
         </p>
         <p className="text-xl md:text-2xl text-white/80 font-light tracking-wide max-w-2xl mx-auto reveal-delayed">
-          A private advisory practice for men whose presentation must remain coherent with their standing, environment, and trajectory.
+          A private style practice for men with a life to run.
         </p>
       </div>
       

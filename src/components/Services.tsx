@@ -4,19 +4,19 @@ const Services = () => {
       number: "I",
       title: "INITIAL ENGAGEMENT",
       meta: "Three months",
-      description: "A fixed, high-touch engagement that audits, rebuilds, and systemizes the client's approach to presentation. Includes intake and alignment, wardrobe audit, style framework, initial sourcing and tailoring, grooming baseline, the digital wardrobe, and the Annual Presentation Map."
+      description: "Nothing here is templated. A full audit of where things stand — what stays, what goes, and what needs to be built — followed by a complete rebuild shaped entirely around you. Wardrobe sourcing, framework, grooming baseline, digital wardrobe, and an Annual Style Map. The foundation everything else runs on. At the close, those who wish to continue move into a retainer. Most do."
     },
     {
       number: "II",
       title: "RETAINER",
       meta: "Ongoing",
-      description: "A standing system of judgment and control. Not task-based. Continuous oversight of the wardrobe, real-time guidance, light sourcing, and maintenance of the digital wardrobe. Event and travel guidance within expected cadence."
+      description: "A standing system of judgment and oversight — not task-based, not reactive. Continuous wardrobe oversight, real-time guidance, ongoing wardrobe sourcing, digital wardrobe maintenance, and event and travel guidance within expected cadence. You don't manage this. That's the point."
     },
     {
       number: "III",
       title: "INTENSIVES",
       meta: "Activated as required",
-      description: "Discrete engagements activated when scope, timeline, or visibility exceeds retainer cadence. Structured and priced separately to preserve clarity and time control. Event-based styling, travel wardrobe planning, seasonal resets, expanded gifting, grooming systems."
+      description: "The expected is already accounted for. At the start of the retainer, we map the year — every known event, trip, and visibility moment planned in advance. Intensives exist for what the calendar couldn't predict. When something unforeseen demands more than the retainer's cadence allows, one is activated. Scoped, priced, and executed separately, so everything already running stays undisturbed."
     }
   ];
 

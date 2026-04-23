@@ -1,4 +1,5 @@
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 
 const About = () => {
   return (
@@ -6,66 +7,48 @@ const About = () => {
       <Navigation />
       <section className="pt-32 pb-32 bg-background">
         <div className="container mx-auto px-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-20 items-center">
-              <div>
-                <h1 className="text-minimal text-muted-foreground mb-4">PRACTICE</h1>
-                <h2 className="text-4xl md:text-6xl font-light text-architectural mb-12">
-                  Advisory, not execution
-                </h2>
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-minimal text-muted-foreground mb-4">ABOUT</h1>
+            <h2 className="text-4xl md:text-6xl font-light text-architectural mb-16">
+              Some things are inherited.
+              <br />
+              The eye for it. The instinct. The joy.
+            </h2>
 
-                <div className="space-y-8">
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    Continuum is a private advisory practice. Clients delegate
-                    decision-making, visual coherence, and presentation management.
-                    The practice removes the need to think through their
-                    presentation independently.
-                  </p>
+            <div className="space-y-8 text-lg text-muted-foreground leading-relaxed">
+              <p>
+                Kemissa was raised in an environment built around the belief
+                that appearance and identity are inseparable — her mother ran
+                a social etiquette academy, a modeling school, and a clothing
+                store. That foundation was not a lesson. It was a language.
+              </p>
 
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    The function is continuity: appearance, grooming, and external
-                    signals held in coherence with professional standing over time.
-                    Judgment is the product. Execution is the byproduct.
-                  </p>
-                </div>
-              </div>
+              <p>
+                The art of style has always felt alive to her in ways that
+                resist simple explanation — and she has spent her life inside
+                that feeling.
+              </p>
 
-              <div className="space-y-12">
-                <div>
-                  <h3 className="text-minimal text-muted-foreground mb-6">APPROACH</h3>
-                  <div className="space-y-6">
-                    <div className="border-l-2 border-architectural pl-6">
-                      <h4 className="text-lg font-medium mb-2">Judgment</h4>
-                      <p className="text-muted-foreground">Decisions made on the client's behalf, inside an agreed framework.</p>
-                    </div>
-                    <div className="border-l-2 border-architectural pl-6">
-                      <h4 className="text-lg font-medium mb-2">Discretion</h4>
-                      <p className="text-muted-foreground">The practice operates in the background of a client's life.</p>
-                    </div>
-                    <div className="border-l-2 border-architectural pl-6">
-                      <h4 className="text-lg font-medium mb-2">Continuity</h4>
-                      <p className="text-muted-foreground">The system holds; clients do not manage it.</p>
-                    </div>
-                  </div>
-                </div>
+              <p>
+                What she brings to Continuum is a lifelong study of the
+                distance between who a person is and how they appear — and
+                the deliberate work of closing it. Not surface adjustment.
+                Self-authorship made visible. She applies to her clients the
+                same rigor she applies to herself: constant, considered,
+                always in pursuit of the most precise version of the person
+                in front of her.
+              </p>
 
-                <div className="pt-8 border-t border-border">
-                  <div className="grid grid-cols-2 gap-8">
-                    <div>
-                      <h3 className="text-minimal text-muted-foreground mb-2">CLIENT CAP</h3>
-                      <p className="text-xl">4–5</p>
-                    </div>
-                    <div>
-                      <h3 className="text-minimal text-muted-foreground mb-2">ACQUISITION</h3>
-                      <p className="text-xl">Referral only</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <p className="text-foreground/90 italic">
+                Shopping is her joy. Transformation is her purpose. The 2.0
+                version of every client already exists. Her work is simply
+                making him undeniable.
+              </p>
             </div>
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

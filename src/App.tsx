@@ -6,8 +6,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Index from "./pages/Index";
 import Services from "./pages/Services";
+import Practice from "./pages/Practice";
 import About from "./pages/About";
-import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
 import { AuthProvider } from "@/providers/AuthProvider";
@@ -66,8 +66,8 @@ function MarketingRoutes() {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/services" element={<Services />} />
+      <Route path="/practice" element={<Practice />} />
       <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} />
       {/* ADD ALL CUSTOM MARKETING ROUTES ABOVE THE CATCH-ALL */}
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -16,11 +16,11 @@ const Navigation = () => {
           <a href="/services" className="text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
             ENGAGEMENT
           </a>
-          <a href="/about" className="text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
+          <a href="/practice" className="text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
             PRACTICE
           </a>
-          <a href="/contact" className="text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
-            INQUIRY
+          <a href="/about" className="text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
+            ABOUT
           </a>
         </div>
 
@@ -45,11 +45,11 @@ const Navigation = () => {
             <a href="/services" className="block text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
               ENGAGEMENT
             </a>
-            <a href="/about" className="block text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
+            <a href="/practice" className="block text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
               PRACTICE
             </a>
-            <a href="/contact" className="block text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
-              INQUIRY
+            <a href="/about" className="block text-minimal text-muted-foreground hover:text-foreground transition-colors duration-300">
+              ABOUT
             </a>
             
             {/* Mobile Theme Toggle */}

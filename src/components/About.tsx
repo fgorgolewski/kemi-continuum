@@ -3,25 +3,32 @@ const About = () => {
     <section id="about" className="py-32 bg-muted/20">
       <div className="container mx-auto px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-20 items-center">
+          <div className="grid md:grid-cols-2 gap-20 items-start">
             <div>
               <h2 className="text-minimal text-muted-foreground mb-4">PRACTICE</h2>
               <h3 className="text-4xl md:text-6xl font-light text-architectural mb-12">
-                Advisory, not execution
+                Thought through.
+                <br />
+                Taken care of.
               </h3>
 
               <div className="space-y-8">
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  Continuum is a private advisory practice. Clients delegate
-                  decision-making, visual coherence, and presentation management.
-                  The practice removes the need to think through their
-                  presentation independently.
+                  Continuum is a private style practice — intentionally small,
+                  deliberately selective. You delegate the thinking, the
+                  decisions, and the doing — how you dress, how you groom, how
+                  you show up. None of it stays on your plate.
+                </p>
+
+                <p className="text-lg italic text-foreground/80 leading-relaxed">
+                  The approach adapts. The standard doesn't.
                 </p>
 
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  The function is continuity: appearance, grooming, and external
-                  signals held in coherence with professional standing over time.
-                  Judgment is the product. Execution is the byproduct.
+                  The goal is coherence that holds over time — how you look,
+                  in alignment with who you are and where you're going. The
+                  thinking is ours. The execution is ours. The results are
+                  yours.
                 </p>
               </div>
             </div>
@@ -31,31 +38,32 @@ const About = () => {
                 <h4 className="text-minimal text-muted-foreground mb-6">APPROACH</h4>
                 <div className="space-y-6">
                   <div className="border-l-2 border-architectural pl-6">
-                    <h5 className="text-lg font-medium mb-2">Judgment</h5>
-                    <p className="text-muted-foreground">Decisions made on the client's behalf, inside an agreed framework.</p>
+                    <h5 className="text-lg font-medium mb-2">Direction</h5>
+                    <p className="text-muted-foreground">
+                      Every aesthetic decision made on your behalf — within a
+                      framework built entirely around you.
+                    </p>
                   </div>
                   <div className="border-l-2 border-architectural pl-6">
                     <h5 className="text-lg font-medium mb-2">Discretion</h5>
-                    <p className="text-muted-foreground">The practice operates in the background of a client's life.</p>
+                    <p className="text-muted-foreground">
+                      The work happens in the background. You feel the results,
+                      not the process.
+                    </p>
                   </div>
                   <div className="border-l-2 border-architectural pl-6">
                     <h5 className="text-lg font-medium mb-2">Continuity</h5>
-                    <p className="text-muted-foreground">The system holds; clients do not manage it.</p>
+                    <p className="text-muted-foreground">
+                      Once the system is in place, it holds. You don't touch
+                      it.
+                    </p>
                   </div>
                 </div>
               </div>
 
               <div className="pt-8 border-t border-border">
-                <div className="grid grid-cols-2 gap-8">
-                  <div>
-                    <h4 className="text-minimal text-muted-foreground mb-2">CLIENT CAP</h4>
-                    <p className="text-xl">4–5</p>
-                  </div>
-                  <div>
-                    <h4 className="text-minimal text-muted-foreground mb-2">ACQUISITION</h4>
-                    <p className="text-xl">Referral only</p>
-                  </div>
-                </div>
+                <h4 className="text-minimal text-muted-foreground mb-2">CLIENT CAP</h4>
+                <p className="text-xl">5</p>
               </div>
             </div>
           </div>
