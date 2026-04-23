@@ -16,6 +16,7 @@
 - [ ] [K003] 🤝 **P3** Email routing — configure remaining 4 addresses (support@, dila@, hello@, donotreply@) for continuumbykemissa.com. kemissa@ already done → kr@kemissa.com.
 - [ ] [K013] 🔥 **P1** Fix bounce on kemissa@continuumbykemissa.com — emails sent there return to sender with error (2026-04-23). DNS is OK (MX → Cloudflare Email Routing, SPF present). Likely causes: (a) destination `kr@kemissa.com` not Verified in Cloudflare Email Routing, or (b) kemissa.com itself has no MX / rejects mail. Check: Dashboard → continuumbykemissa.com → Email → Email Routing → Destination addresses. Also consider switching destination to a Gmail address that definitely accepts mail.
 - [ ] [K014] 🤝 **P2** After K013 is fixed — verify hello@continuumbykemissa.com is active and forwards correctly (site footer now uses hello@, not kemissa@).
+- [ ] [K015] 🤝 **P1** 2026-04-24 — verify new site is live on continuumbykemissa.com after Cloudflare Pages deploy of commit 4abe65d. Check: (1) Hero tagline reads "A private style practice for men with a life to run.", (2) Practice section shows "Thought through. Taken care of." + Direction/Discretion/Continuity + Client Cap 5, (3) Phase I/II/III descriptions match new copy, (4) /about route shows Kemissa bio ("Some things are inherited..."), (5) /practice route exists, (6) no INQUIRY link in nav, (7) footer reads "For referred enquiries — hello@continuumbykemissa.com", (8) /contact returns 404 (expected). Test on desktop + mobile.
 
 ## P2 — After P1 alignment
 
